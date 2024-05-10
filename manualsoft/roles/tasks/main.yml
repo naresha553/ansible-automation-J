@@ -62,3 +62,12 @@
         cd /tmp/Python-3.10.11 && \
         make && \
         make install
+
+    - name: Create multiple paths
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /path/to/directory1
+        - /path/to/directory2
+        - /path/to/directory3
