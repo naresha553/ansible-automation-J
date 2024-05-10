@@ -78,3 +78,9 @@
         - /path/to/directory1
         - /path/to/directory2
         - /path/to/directory3
+
+      ansible.builtin.file:
+        path: /path/to/your/directory  # Specify the path to the directory
+        owner: user123  # Specify the desired owner
+        group: user123  # Specify the desired group
+        recurse: yes
