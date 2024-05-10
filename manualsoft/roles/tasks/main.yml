@@ -30,3 +30,35 @@
         line: 'export PATH=$JAVA_HOME/bin:$PATH'
         state: present
         create: yes
+
+---
+
+    - name: Install required dependencies
+      ansible.builtin.package:
+        name: ['gcc', 'make', 'openssl-devel', 'libffi-devel', 'zlib-devel']
+
+#    - name: Download Python source code
+#      ansible.builtin.get_url:
+#        url: "https://www.python.org/ftp/python/3.10.11/Python-3.10.11.tgz"
+#        dest: "/tmp/Python-3.10.11.tgz"
+
+    - name: Copy python tarball to remote host
+      ansible.builtin.copy:
+        src: /path/to/java.tar.gz  # Update this path with the actual path to the Java tarball
+        dest: /tmp/java.tar.gz
+
+    - name: Extract Python source code
+      ansible.builtin.unarchive:
+        src: "/tmp/Python-3.10.11.tgz"
+        dest: "/tmp"
+
+    - name: Configure Python build
+      ansible.builtin.command: |
+        cd /tmp/Python-3.10.11 && \
+        ./configure --prefix=/usr/local --enable-optimizations
+
+    - name: Build and install Python
+      ansible.builtin.command: |
+        cd /tmp/Python-3.10.11 && \
+        make && \
+        make install
