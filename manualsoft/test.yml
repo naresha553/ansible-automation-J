@@ -1,0 +1,8 @@
+---
+- name: Install softwares
+  hosts : all
+
+  serial: 1
+
+  roles:
+    -   {role: 'packages', tags: 'packages' }

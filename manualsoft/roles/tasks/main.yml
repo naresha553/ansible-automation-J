@@ -1,0 +1,32 @@
+---
+
+    - name: Create directory for Java installation
+      ansible.builtin.file:
+        path: /apps/testuser
+        state: directory
+
+    - name: Copy Java tarball to remote host
+      ansible.builtin.copy:
+        src: /path/to/java.tar.gz  # Update this path with the actual path to the Java tarball
+        dest: /tmp/java.tar.gz
+
+    - name: Extract Java tarball
+      ansible.builtin.unarchive:
+        src: /tmp/java.tar.gz
+        dest: /apps/testuser
+        remote_src: yes
+        creates: /apps/testuser/jdk  # Adjust this path based on the contents of the tarball
+
+    - name: Set JAVA_HOME environment variable
+      ansible.builtin.lineinfile:
+        dest: /etc/profile
+        line: 'export JAVA_HOME=/apps/testuser/jdk'
+        state: present
+        create: yes
+
+    - name: Update PATH environment variable
+      ansible.builtin.lineinfile:
+        dest: /etc/profile
+        line: 'export PATH=$JAVA_HOME/bin:$PATH'
+        state: present
+        create: yes
