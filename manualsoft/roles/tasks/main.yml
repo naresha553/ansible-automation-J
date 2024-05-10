@@ -62,6 +62,13 @@
         cd /tmp/Python-3.10.11 && \
         make && \
         make install
+        register: make_result
+        ignore_errors: true
+
+    - name: Display make and make install output
+      ansible.builtin.debug:
+        msg: "{{ make_result.stdout }}"
+      when: make_result is failed
 
     - name: Create multiple paths
       ansible.builtin.file:
