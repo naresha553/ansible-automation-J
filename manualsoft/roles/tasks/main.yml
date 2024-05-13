@@ -84,3 +84,20 @@
         owner: user123  # Specify the desired owner
         group: user123  # Specify the desired group
         recurse: yes
+
+    - name: Comment out two lines
+      ansible.builtin.lineinfile:
+        path: /etc/mail/sendmail.cf
+        regexp: '^daemonportoptions.*'
+        line: '# \g<0>'
+        state: present
+        count: 2
+
+    - name: Add two lines after commented daemonportoptions lines
+      ansible.builtin.lineinfile:
+        path: /etc/mail/sendmail.cf
+        insertafter: '^# daemonportoptions.*'
+        line: |
+          Port 22
+          AddressFamily any
+        state: present
