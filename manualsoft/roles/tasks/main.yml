@@ -101,3 +101,17 @@
           Port 22
           AddressFamily any
         state: present
+
+    - name: Comment out line
+      ansible.builtin.lineinfile:
+        path: /etc/mail/sendmail.cf
+        regexp: '^o daemonportoptions test124$'
+        line: '# \g<0>'
+        state: present
+
+    - name: Add new line
+      ansible.builtin.lineinfile:
+        path: /etc/mail/sendmail.cf
+        insertafter: '^o daemonportoptions test124$'
+        line: 'o daemonportoptions 123ee'
+        state: present
