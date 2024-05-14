@@ -115,3 +115,12 @@
         insertafter: '^o daemonportoptions test124$'
         line: 'o daemonportoptions 123ee'
         state: present
+
+        - name: Add content above existing content
+      ansible.builtin.lineinfile:
+        path: /path/to/your/file
+        insertbefore: BOF
+        line: |
+          Your content goes here
+          You can add multiple lines
+        state: present
