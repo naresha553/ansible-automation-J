@@ -1,0 +1,38 @@
+---
+- name: Set up JAVA_HOME environment variable for a specific user
+  hosts: all
+  become: yes
+
+  vars:
+    user: testuser123
+    java_home_path: /apps/test/testuser123/bin/java
+
+  tasks:
+    - name: Ensure the java directory exists
+      file:
+        path: "{{ java_home_path }}"
+        state: directory
+
+    - name: Set JAVA_HOME environment variable in user's profile
+      lineinfile:
+        path: "/home/{{ user }}/.bashrc"
+        state: present
+        regexp: '^export JAVA_HOME='
+        line: 'export JAVA_HOME={{ java_home_path }}'
+        create: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+    - name: Add JAVA_HOME to user's PATH
+      lineinfile:
+        path: "/home/{{ user }}/.bashrc"
+        state: present
+        regexp: '^export PATH=.*JAVA_HOME'
+        line: 'export PATH=$JAVA_HOME/bin:$PATH'
+        create: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+    - name: Apply environment variables for the user
+      become_user: "{{ user }}"
+      shell: source /home/{{ user }}/.bashrc
