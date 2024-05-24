@@ -1,0 +1,23 @@
+error handling
+
+#!/bin/bash
+
+# Define the playbook file
+PLAYBOOK="path/to/your_playbook.yml"
+
+# Run the Ansible playbook and capture the output and error
+PLAYBOOK_OUTPUT=$(ansible-playbook "$PLAYBOOK" 2>&1)
+EXIT_STATUS=$?
+
+# Check if the playbook execution was successful
+if [ $EXIT_STATUS -ne 0 ]; then
+  # If there was an error, capture it in a variable
+  ERROR_OUTPUT="$PLAYBOOK_OUTPUT"
+  echo "An error occurred while executing the playbook:"
+  echo "$ERROR_OUTPUT"
+else
+  # If successful, capture the output
+  SUCCESS_OUTPUT="$PLAYBOOK_OUTPUT"
+  echo "Playbook executed successfully:"
+  echo "$SUCCESS_OUTPUT"
+fi
