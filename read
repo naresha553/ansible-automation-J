@@ -47,3 +47,8 @@ failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task
           debug:
             msg: "A task within the block has failed"
           notify: Block failure handler
+
+    - name: Fail if the directory exists
+      fail:
+        msg: "The directory /path/to/directory already exists!"
+      when: dir_status.stat.exists
