@@ -27,3 +27,9 @@ To use the installed software from any location in the terminal, you need to add
 1. Open the `.bashrc` file in your home directory with a text editor. For example:
    ```sh
    nano ~/.bashrc
+
+
+    - name: Copy example.txt to /tmp on remote server
+      copy:
+        src: /tmp/example.txt
+        dest: /tmp/example.txt
