@@ -56,3 +56,8 @@ failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task
       fail:
         msg: "The directory /path/to/directory already exists!"
       when: dir_status.stat.exists
+
+    - name: Check if the directory exists
+      stat:
+        path: /path/to/directory
+      register: dir_status
