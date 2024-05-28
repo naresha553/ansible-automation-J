@@ -1,0 +1,29 @@
+# README
+
+## Overview
+This document explains the software installed in the `/tmp/test` directory and how to set the path in `.bashrc` to access these applications from the command line.
+
+## Installed Software
+The following software packages are installed in the `/tmp/test` directory:
+
+1. **SoftwareA**
+   - **Version**: 1.0.0
+   - **Description**: A tool for performing task A.
+   - **Executable Path**: `/tmp/test/softwareA/bin/softwareA`
+
+2. **SoftwareB**
+   - **Version**: 2.1.0
+   - **Description**: A utility for handling task B.
+   - **Executable Path**: `/tmp/test/softwareB/bin/softwareB`
+
+3. **SoftwareC**
+   - **Version**: 3.3.3
+   - **Description**: An application for managing task C.
+   - **Executable Path**: `/tmp/test/softwareC/bin/softwareC`
+
+## Setting the PATH
+To use the installed software from any location in the terminal, you need to add the paths to the executables in your `.bashrc` file. Follow these steps:
+
+1. Open the `.bashrc` file in your home directory with a text editor. For example:
+   ```sh
+   nano ~/.bashrc
