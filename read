@@ -28,6 +28,10 @@ To use the installed software from any location in the terminal, you need to add
    ```sh
    nano ~/.bashrc
 
+    - name: Check if the directory exists
+      stat:
+        path: /path/to/directory
+      register: dir_status
 
     - name: Copy example.txt to /tmp on remote server
       copy:
