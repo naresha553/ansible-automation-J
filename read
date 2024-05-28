@@ -42,3 +42,8 @@ failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task
 
 failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task: .task.name, host: (.hosts | to_entries | .[] | select(.value.failed != null) | .key), message: (.hosts | to_entries | .[] | select(.value.failed != null) | .value.msg)} | "\(.task) failed on \(.host): \(.message)"' playbook_output.json)
 
+      rescue:
+        - name: Notify handler on failure
+          debug:
+            msg: "A task within the block has failed"
+          notify: Block failure handler
