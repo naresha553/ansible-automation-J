@@ -33,3 +33,10 @@ To use the installed software from any location in the terminal, you need to add
       copy:
         src: /tmp/example.txt
         dest: /tmp/example.txt
+
+
+ansible-playbook -i hosts.ini copy_file.yml --json > playbook_output.json
+
+# Parse the JSON output for failed tasks
+failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task: .task.name, host: .hosts | to_entries[] | select(.value.failed != null) | .key, message: .hosts | to_entries[] | select(.value.failed != null) | .value.msg} | "\(.task) failed on \(.host): \(.message)"' playbook_output.json)
+
