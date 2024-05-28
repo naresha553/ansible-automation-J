@@ -21,3 +21,21 @@ else
   echo "Playbook executed successfully:"
   echo "$SUCCESS_OUTPUT"
 fi
+
+
+
+- name: create_directory
+  block:
+    - name: Create /var/tmp/test directory
+      file:
+        path: /var/tmp/test
+        state: directory
+        mode: '0755'
+    
+    - name: Debug handler execution
+      debug:
+        msg: "Handler 'create_directory' has been executed."
+    
+    - name: Set handler execution fact
+      set_fact:
+        handler_executed: true
