@@ -61,3 +61,10 @@ failed_tasks=$(jq -r '.plays[].tasks[] | select(.hosts[].failed != null) | {task
       stat:
         path: /path/to/directory
       register: dir_status
+
+
+- name: create_directory
+  file:
+    path: /var/tmp/test
+    state: directory
+    mode: '0755'
