@@ -1,0 +1,11 @@
+    - name: Display block results
+      debug:
+        msg: |
+          Unarchive result: {{ block_results.unarchive }}
+          First command output: {{ block_results.result1.stdout }}
+          First command return code: {{ block_results.result1.rc }}
+          Second command output: {{ block_results.result2.stdout }}
+          Second command return code: {{ block_results.result2.rc }}
+          Third command output: {{ block_results.result3.stdout }}
+          Third command return code: {{ block_results.result3.rc }}
+          Final status of the test: {{ block_results.test_status }}
