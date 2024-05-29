@@ -1,3 +1,30 @@
+      always:
+        - name: Set block results
+          set_fact:
+            block_results: >
+              {{
+                {
+                  'unarchive': {
+                    'changed': unarchive_result.changed,
+                    'dest': unarchive_result.dest,
+                    'rc': unarchive_result.rc
+                  },
+                  'result1': {
+                    'stdout': result1.stdout,
+                    'rc': result1.rc
+                  },
+                  'result2': {
+                    'stdout': result2.stdout,
+                    'rc': result2.rc
+                  },
+                  'result3': {
+                    'stdout': result3.stdout,
+                    'rc': result3.rc
+                  },
+                  'test_status': test_status
+                }
+              }}
+
     - name: Display block results
       debug:
         msg: |
