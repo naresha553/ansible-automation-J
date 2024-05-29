@@ -1,0 +1,19 @@
+    - name: Attempt to execute a command
+      block:
+        - name: Run a command that might fail
+          command: /bin/false  # This command will fail
+          register: command_result
+          failed_when: command_result.rc != 0
+
+      rescue:
+        - name: Handle command failure
+          set_fact:
+            command_status: failed
+
+        - name: Debug command failure
+          debug:
+            msg: "Command execution failed with status: {{ command_status }}"
+
+    - name: Display final command status
+      debug:
+        msg: "Final status of the command execution is {{ command_status }}"
