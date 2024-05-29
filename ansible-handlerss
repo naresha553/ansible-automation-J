@@ -1,0 +1,55 @@
+---
+- name: Execute a block of commands and register output
+  hosts: localhost
+  become: no
+
+  vars:
+    block_results: {}
+
+  tasks:
+    - name: Execute a block of commands
+      block:
+        - name: Run the first shell command
+          shell: echo "This is the first command"
+          register: result1
+
+        - name: Run the second shell command
+          shell: echo "This is the second command"
+          register: result2
+
+        - name: Run the third shell command
+          shell: |
+            echo "This is the third command"
+            exit 1  # Simulate a failure
+          register: result3
+          ignore_errors: yes
+
+      rescue:
+        - name: Handle block failure
+          debug:
+            msg: "Block failed. Handling error."
+
+      always:
+        - name: Set block results
+          set_fact:
+            block_results: >
+              {{
+                {
+                  'result1': {
+                    'stdout': result1.stdout,
+                    'rc': result1.rc
+                  },
+                  'result2': {
+                    'stdout': result2.stdout,
+                    'rc': result2.rc
+                  },
+                  'result3': {
+                    'stdout': result3.stdout,
+                    'rc': result3.rc
+                  }
+                }
+              }}
+
+    - name: Display block results
+      debug:
+        var: block_results
