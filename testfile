@@ -1,4 +1,8 @@
-      always:
+(echo "Subject: Test Email"; echo "This is a test email sent from the command line using sendmail."; echo ".") | sendmail -v -S smtp.example.com:587 recipient@example.com
+
+
+
+always:
         - name: Set block results
           set_fact:
             block_results: >
