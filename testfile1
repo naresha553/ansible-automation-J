@@ -1,0 +1,64 @@
+---
+- name: Execute tasks and store combined results
+  hosts: localhost
+  become: no
+
+  vars:
+    results: {}
+
+  tasks:
+    - name: Run the first shell command
+      shell: echo "This is the first command"
+      register: result1
+
+    - name: Store the result of the first command
+      set_fact:
+        results: "{{ results | combine({'result1': result1}) }}"
+
+    - name: Copy a file
+      copy:
+        src: /etc/hosts
+        dest: /tmp/hosts_copy
+      register: result_copy
+
+    - name: Store the result of the copy task
+      set_fact:
+        results: "{{ results | combine({'result_copy': result_copy}) }}"
+
+    - name: Unarchive a file
+      unarchive:
+        src: /tmp/sample.tar.gz
+        dest: /tmp/sample
+      register: result_unarchive
+
+    - name: Store the result of the unarchive task
+      set_fact:
+        results: "{{ results | combine({'result_unarchive': result_unarchive}) }}"
+
+    - name: Run the second shell command
+      shell: echo "This is the second command"
+      register: result2
+
+    - name: Store the result of the second command
+      set_fact:
+        results: "{{ results | combine({'result2': result2}) }}"
+
+    - name: Run the third shell command that fails
+      shell: |
+        echo "This is the third command"
+        exit 1  # Simulate a failure
+      register: result3
+      ignore_errors: yes  # Allow the playbook to continue even if this command fails
+
+    - name: Store the result of the third command
+      set_fact:
+        results: "{{ results | combine({'result3': result3}) }}"
+
+    - name: Write results to JSON file
+      copy:
+        content: "{{ results | to_nice_json }}"
+        dest: /tmp/ansible_results.json
+
+    - name: Display final results
+      debug:
+        msg: "{{ results }}"
