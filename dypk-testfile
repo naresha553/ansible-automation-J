@@ -1,0 +1,84 @@
+JSON File
+Create your JSON file (e.g., software.json) with the necessary details:
+
+json
+Copy code
+{
+  "software": [
+    {
+      "name": "java",
+      "version": "12"
+    },
+    {
+      "name": "dotnet",
+      "version": "5.0"
+    },
+    {
+      "name": "java",
+      "version": "11"
+    }
+  ]
+}
+Ansible Playbook
+Create an Ansible playbook (e.g., install_software.yml) to handle the installation:
+
+yaml
+Copy code
+---
+- name: Install software packages
+  hosts: localhost
+  gather_facts: no
+  vars:
+    software: []
+
+  tasks:
+    - name: Create directories for software installation
+      file:
+        path: "/opt/{{ item.name }}-{{ item.version }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ software }}"
+
+    - name: Download and extract software packages
+      block:
+        - name: Set download URL based on software name and version
+          set_fact:
+            download_url: "http://example.com/{{ item.name }}{{ item.version }}.tar.gz"
+          loop: "{{ software }}"
+
+        - name: Download software package
+          get_url:
+            url: "{{ download_url }}"
+            dest: "/tmp/{{ item.name }}{{ item.version }}.tar.gz"
+          loop: "{{ software }}"
+
+        - name: Extract software package
+          unarchive:
+            src: "/tmp/{{ item.name }}{{ item.version }}.tar.gz"
+            dest: "/opt/{{ item.name }}-{{ item.version }}"
+            remote_src: yes
+          loop: "{{ software }}"
+
+        - name: Clean up downloaded files
+          file:
+            path: "/tmp/{{ item.name }}{{ item.version }}.tar.gz"
+            state: absent
+          loop: "{{ software }}"
+Running the Playbook
+You can pass the JSON file to the playbook using the --extra-vars option. Here's the command to run the playbook:
+
+sh
+Copy code
+ansible-playbook -i localhost, install_software.yml --extra-vars "@software.json"
+Explanation
+JSON File: Contains an array of software items, each with a name and version.
+Ansible Playbook:
+vars: Declares an empty software variable to be populated by the JSON file.
+Tasks:
+Create Directories: Creates directories for each software package in /opt.
+Set Download URL: Constructs the download URL for each software package.
+Download Software: Downloads the tar.gz file for each software package.
+Extract Software: Extracts the tar.gz file to the corresponding directory.
+Clean Up: Removes the downloaded tar.gz files from the /tmp directory.
+Running the Playbook: Uses --extra-vars "@software.json" to pass the JSON file to the playbook.
+This will read the software.json file, download, extract, and install the specified software packages to their respective directories in /opt. Make sure to replace the example.com URLs with the actual URLs where the software packages are hosted.
