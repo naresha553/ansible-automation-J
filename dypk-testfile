@@ -82,3 +82,19 @@ Extract Software: Extracts the tar.gz file to the corresponding directory.
 Clean Up: Removes the downloaded tar.gz files from the /tmp directory.
 Running the Playbook: Uses --extra-vars "@software.json" to pass the JSON file to the playbook.
 This will read the software.json file, download, extract, and install the specified software packages to their respective directories in /opt. Make sure to replace the example.com URLs with the actual URLs where the software packages are hosted.
+
+you may also use
+
+
+---
+- name: Display software variables
+  hosts: localhost
+  gather_facts: no
+  vars:
+    software: []
+
+  tasks:
+    - name: Display software details
+      debug:
+        msg: "Name: {{ item.name }}, Version: {{ item.version }}"
+      loop: "{{ software }}"
