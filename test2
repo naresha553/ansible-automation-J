@@ -1,0 +1,43 @@
+---
+- name: Example playbook with loop and concatenated registered values
+  hosts: localhost
+  gather_facts: false
+  vars:
+    items_to_process:
+      - item1
+      - item2
+      - item3
+    some_fact: "Prefix_"
+  tasks:
+    - name: Initialize the results list
+      set_fact:
+        results: []
+
+    - name: Process each item
+      include_tasks: process_item.yml
+      loop: "{{ items_to_process }}"
+      loop_control:
+        loop_var: item
+
+    - name: Display final results
+      debug:
+        var: results
+
+# Content of process_item.yml
+
+---
+- name: Process item
+  debug:
+    msg: "Processing {{ item }}"
+
+- name: Do some work and register the result
+  shell: "echo Result for {{ item }}"
+  register: item_result
+
+- name: Concatenate fact and registered value
+  set_fact:
+    concatenated_result: "{{ some_fact }}{{ item_result.stdout }}"
+
+- name: Append concatenated result to the results list
+  set_fact:
+    results: "{{ results + [ concatenated_result ] }}"
