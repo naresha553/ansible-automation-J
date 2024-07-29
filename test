@@ -1,1 +1,17 @@
 for file in /proc/*/status; do awk '/VmSwap|Name/{printf $2 " " $3}END{ print "" }' $file; done | sort -k 2 -n -r | head -n 10
+
+
+
+
+#!/bin/bash
+
+# Directory to check
+DIRECTORY="/path/to/directory"
+
+# Check if the directory exists
+if [ -d "$DIRECTORY" ]; then
+    echo "Directory $DIRECTORY exists. Listing contents:"
+    ls -l "$DIRECTORY"
+else
+    echo "Directory $DIRECTORY does not exist."
+fi
