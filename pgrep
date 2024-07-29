@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Check if sssd process is running
+if pgrep -x "sssd" > /dev/null
+then
+    echo "sssd"
+fi
+
+# Check if vas process is running
+if pgrep -x "vas" > /dev/null
+then
+    echo "vas"
+fi
