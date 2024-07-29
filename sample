@@ -1,0 +1,11 @@
+---
+- name: Run test.sh with hostname on remote servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Get the hostname of the server
+      shell: hostname
+      register: hostname_output
+
+    - name: Run test.sh with the hostname as an argument
+      shell: ./test.sh {{ hostname_output.stdout }}
