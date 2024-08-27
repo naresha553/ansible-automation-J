@@ -1,0 +1,28 @@
+Server Details:
+
+Server Name: [Server_Name]
+IP Address: [IP_Address]
+Operating System: [OS_Details]
+Instance Type: [Instance_Type]
+Package Installation Status:
+
+Package Name: [Package_1_Name]
+Installation Status: [Status (Success/Failure)]
+Version Installed: [Version_Number]
+Package Name: [Package_2_Name]
+Installation Status: [Status (Success/Failure)]
+Version Installed: [Version_Number]
+Package Name: [Package_3_Name]
+Installation Status: [Status (Success/Failure)]
+Version Installed: [Version_Number]
+Execution Summary:
+
+Start Time: [Start_Time]
+End Time: [End_Time]
+Total Execution Time: [Duration]
+If you require any further details or encounter any issues, please feel free to contact the support team.
+
+Best regards,
+[Your Name]
+[Your Position]
+[Your Contact Information]
