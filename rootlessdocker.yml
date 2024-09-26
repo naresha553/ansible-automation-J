@@ -1,0 +1,78 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    docker_user: "naresh"
+
+  tasks:
+    - name: Update the system
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name: docker
+        state: present
+
+    - name: Install required packages for rootless Docker
+      ansible.builtin.dnf:
+        name:
+          - uidmap
+          - slirp4netns
+        state: present
+
+    - name: Add subuid and subgid ranges for the Docker user
+      ansible.builtin.command:
+        cmd: "usermod --add-subuids 100000-165535 --add-subgids 100000-165535 {{ docker_user }}"
+      become: yes
+
+    - name: Log out and log back in (dummy task to simulate user logout)
+      ansible.builtin.pause:
+        prompt: "Please ensure the user has logged out and logged back in. Press Enter to continue."
+
+    - name: Run rootless Docker setup for the user
+      ansible.builtin.command:
+        cmd: "sudo -i -u {{ docker_user }} dockerd-rootless-setuptool.sh install"
+      become: yes
+      become_user: "{{ docker_user }}"
+
+    - name: Start the rootless Docker service for the user
+      ansible.builtin.command:
+        cmd: "systemctl --user start docker"
+      become: yes
+      become_user: "{{ docker_user }}"
+
+    - name: Enable rootless Docker to start on boot
+      ansible.builtin.command:
+        cmd: "systemctl --user enable docker"
+      become: yes
+      become_user: "{{ docker_user }}"
+
+    - name: Set environment variables for rootless Docker in user’s shell config
+      ansible.builtin.lineinfile:
+        path: "/home/{{ docker_user }}/.bashrc"
+        line: |
+          export PATH=/usr/bin:$PATH
+          export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+        create: yes
+        state: present
+      become: yes
+      become_user: "{{ docker_user }}"
+
+    - name: Source bashrc to apply the environment variables
+      ansible.builtin.shell: "source /home/{{ docker_user }}/.bashrc"
+      become: yes
+      become_user: "{{ docker_user }}"
+
+    - name: Verify Docker installation
+      ansible.builtin.command:
+        cmd: "docker version"
+      become: yes
+      become_user: "{{ docker_user }}"
+      register: docker_output
+
+    - name: Show Docker version output
+      ansible.builtin.debug:
+        var: docker_output.stdout
