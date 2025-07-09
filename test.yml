@@ -1,1 +1,35 @@
 
+---
+- name: Gather AL2 Server Facts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Gather all system facts
+      ansible.builtin.setup:
+
+    - name: Get list of installed packages
+      ansible.builtin.shell: rpm -qa
+      register: installed_packages
+
+    - name: Save installed packages to file
+      copy:
+        content: "{{ installed_packages.stdout }}"
+        dest: /tmp/installed_packages.txt
+
+    - name: Get running services
+      ansible.builtin.shell: systemctl list-units --type=service --state=running
+      register: running_services
+
+    - name: Save running services to file
+      copy:
+        content: "{{ running_services.stdout }}"
+        dest: /tmp/running_services.txt
+
+    - name: Get open ports
+      ansible.builtin.shell: ss -tulnp
+      register: open_ports
+
+    - name: Save open ports to file
+      copy:
+        content: "{{ open_ports.stdout }}"
+        dest: /tmp/open_ports.txt
